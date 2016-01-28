@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/wadouk/ya-request-builder.svg?branch=master)](https://travis-ci.org/wadouk/ya-request-builder)
+
 # Isomorphic or universal http client because no one exist like I need
 
 On server that manage for proxy because : 
