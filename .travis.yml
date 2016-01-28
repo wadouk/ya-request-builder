@@ -1,6 +1,10 @@
 language: node_js
-
+sudo: false
+notifications:
+- email: false
 node_js:
-  - "4"
-  - "5"
-  - "stable"
+- '4'
+- '5'
+- stable
+addons:
+  sauce_connect: true
