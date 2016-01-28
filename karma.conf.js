@@ -12,6 +12,18 @@ module.exports = function(config) {
       base: 'SauceLabs',
       browserName: 'chrome'
     },
+    'SL_iPhone': {
+      base: 'SauceLabs',
+      browserName: 'iphone',
+      version: '7.1',
+      deviceName: 'iPhone Retina (4-inch)'
+    },
+    'SL_android': {
+      base: 'SauceLabs',
+      version: '4.4',
+      browserName: 'android',
+      deviceName: 'LG Nexus 4 Emulator'
+    },
     'SL_InternetExplorer': {
       base: 'SauceLabs',
       browserName: 'internet explorer',
