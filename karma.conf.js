@@ -74,6 +74,11 @@ module.exports = function (config) {
         });
       },
     },
+    proxies: {
+      '/ok': 'http://localhost:6666/ok',
+      '/ko': 'http://localhost:6666/ko',
+      '/not-found': 'http://localhost:6666/not-found',
+    },
     port : 9876,
     colors : true,
     logLevel : config.LOG_INFO,
