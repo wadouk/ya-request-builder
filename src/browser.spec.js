@@ -18,6 +18,7 @@ describe("browser", () => {
   it("should write headers", () => {
     return request("http://localhost:9876/ok")
       .header("accept-language", "fr-fr")
+      .query("ts", Date.now())
       .get()
       .then((response) => {
         expect(response.headers).to.have.property("accept-language", "fr-fr");
