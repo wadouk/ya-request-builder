@@ -65,11 +65,11 @@ module.exports = function (config) {
     basePath : '',
     frameworks : ['browserify', 'mocha'],
     files : [
-      'browser.spec.js'
+      'src/**/*.spec.js'
     ],
     exclude : [],
     preprocessors : {
-      "browser.spec.js" : ["browserify"],
+      "src/**/*.spec.js" : ["browserify"],
     },
     browserify : {
       debug : true,

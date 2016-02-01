@@ -2,7 +2,7 @@
 var expect = require("expect.js");
 var Promise = require("bluebird");
 var request = require("./server")(Promise);
-var server = require("./server.stub");
+var server = require("../stubs/server.stub");
 describe("server", () => {
 
   it("should make a basic request", () => {
