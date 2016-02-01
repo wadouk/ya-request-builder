@@ -6,8 +6,15 @@
   "browser": "browser.js",
   "scripts": {
     "test": "npm run test-mocha && npm run test-karma",
+    "forever-start":"forever start browser.stub.js",
+    "forever-stop":"forever stopall",
+    "pretest-karma":"npm run forever-start",
+    "posttest-karma":"npm run forever-stop",
+    "pretest-karma-watch":"npm run forever-start",
+    "posttest-karma-watch":"npm run forever-stop",
     "test-mocha": "mocha **/*.server-spec.js",
-    "test-karma": "(forever start browser.stub.js && karma start karma.conf.js --singleRun true --autoWatch false); forever stopall"
+    "test-karma": "karma start karma.conf.js --singleRun true --autoWatch false",
+    "test-karma-watch": "karma start karma.conf.js --singleRun false --autoWatch true"
   },
   "keywords": [
     "isomorphic",
