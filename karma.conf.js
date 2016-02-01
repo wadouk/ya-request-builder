@@ -24,6 +24,12 @@ function browsers() {
         browserName : 'internet explorer',
         version : '10'
       },
+      'SL_InternetExplorer9' : {
+        base : 'SauceLabs',
+        browserName : 'internet explorer',
+        version : '9.0',
+        platform : 'windows 7'
+      },
       'SL_FireFox' : {
         base : 'SauceLabs',
         browserName : 'firefox',
@@ -74,10 +80,10 @@ module.exports = function (config) {
         });
       },
     },
-    proxies: {
-      '/ok': 'http://localhost:6666/ok',
-      '/ko': 'http://localhost:6666/ko',
-      '/not-found': 'http://localhost:6666/not-found',
+    proxies : {
+      '/ok' : 'http://localhost:6666/ok',
+      '/ko' : 'http://localhost:6666/ko',
+      '/not-found' : 'http://localhost:6666/not-found',
     },
     port : 9876,
     colors : true,
