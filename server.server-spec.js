@@ -40,7 +40,7 @@ describe("server", () => {
     })
   });
 
-  it("should write headers as object that replace all previous headers", () => {
+  it("should remove headers", () => {
     return server.start(200, (port) => {
       return request("http://localhost:" + port)
         .header("accept-language", "fr-fr")
@@ -85,7 +85,7 @@ describe("server", () => {
     })
   });
 
-  it("path should only append the existing path", () => {
+  it("should only append the existing path", () => {
     return server.start(200, (port) => {
       return request("http://localhost:" + port + "/path")
         .path("h", "b")
@@ -95,8 +95,19 @@ describe("server", () => {
         })
     })
   });
+  it("should append path if called multiple times", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port + "/path")
+        .path("h")
+        .path("b")
+        .get()
+        .then((response) => {
+          expect(response).to.have.property("originalUrl", "/path/h/b");
+        })
+    })
+  });
 
-  it("path could be reseted", () => {
+  it("should reset path", () => {
     return server.start(200, (port) => {
       return request("http://localhost:" + port + "/path")
         .path([])
@@ -174,7 +185,7 @@ describe("server", () => {
     })
   });
 
-  it("when it fail get error", () => {
+  it("should get error when it fail", () => {
     return server.start(500, (port) => {
       return request("http://localhost:" + port)
         .query({"hello" : "world"})
