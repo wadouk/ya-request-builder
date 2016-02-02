@@ -1,20 +1,21 @@
 {
   "name": "ya-request-builder",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "An isomorphic or universal http client that instanciate as builder",
-  "main": "src/server.js",
-  "browser": "src/browser.js",
+  "main": "build/server.js",
+  "browser": "build/browser.js",
   "scripts": {
     "test": "npm run test-mocha && npm run test-karma",
-    "forever-start":"forever start stubs/browser.stub.js",
-    "forever-stop":"forever stopall",
-    "pretest-karma":"npm run forever-start",
-    "posttest-karma":"npm run forever-stop",
-    "pretest-karma-watch":"npm run forever-start",
-    "posttest-karma-watch":"npm run forever-stop",
+    "forever-start": "forever start stubs/browser.stub.js",
+    "forever-stop": "forever stopall",
+    "pretest-karma": "npm run forever-start",
+    "posttest-karma": "npm run forever-stop",
+    "pretest-karma-watch": "npm run forever-start",
+    "posttest-karma-watch": "npm run forever-stop",
     "test-mocha": "mocha **/*.server-spec.js",
     "test-karma": "karma start karma.conf.js --singleRun true --autoWatch false",
-    "test-karma-watch": "karma start karma.conf.js --singleRun false --autoWatch true"
+    "test-karma-watch": "karma start karma.conf.js --singleRun false --autoWatch true",
+    "postinstall": "babel --ignore '**/*spec.js' src -d build"
   },
   "keywords": [
     "isomorphic",
@@ -26,13 +27,14 @@
   "author": "wadouk",
   "license": "ISC",
   "dependencies": {
-    "request": "2.67.0",
-    "urijs": "1.17.0"
+    "babel-cli": "6.4.5",
+    "request": "2.69.0",
+    "urijs": "1.17.0",
+    "babel-preset-es2015": "6.3.13"
   },
   "devDependencies": {
-    "babel-preset-es2015": "6.3.13",
     "babelify": "7.2.0",
-    "bluebird": "3.1.5",
+    "bluebird": "3.2.1",
     "browserify": "13.0.0",
     "expect.js": "0.3.1",
     "express": "4.13.4",
