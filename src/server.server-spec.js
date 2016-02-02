@@ -129,6 +129,30 @@ describe("server", () => {
     })
   });
 
+  it("should have mutliple query", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port)
+        .query("hello", "world")
+        .query("foo", "bar")
+        .get()
+        .then((response) => {
+          expect(response).to.have.property("originalUrl", "/?hello=world&foo=bar");
+        })
+    })
+  });
+
+  it("should have mutliple query object", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port)
+        .query("hello", "world")
+        .query({"foo": "bar"})
+        .get()
+        .then((response) => {
+          expect(response).to.have.property("originalUrl", "/?hello=world&foo=bar");
+        })
+    })
+  });
+
   it("should filter falsy query", () => {
     return server.start(200, (port) => {
       return request("http://localhost:" + port)
