@@ -1,6 +1,6 @@
 {
   "name": "ya-request-builder",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "An isomorphic or universal http client that instanciate as builder",
   "main": "build/server.js",
   "browser": "build/browser.js",
@@ -15,7 +15,7 @@
     "test-mocha": "mocha **/*.server-spec.js",
     "test-karma": "karma start karma.conf.js --singleRun true --autoWatch false",
     "test-karma-watch": "karma start karma.conf.js --singleRun false --autoWatch true",
-    "postinstall": "babel --ignore '**/*spec.js' src -d build"
+    "postinstall": "babel --presets es2015 --ignore '**/*spec.js' src -d build"
   },
   "keywords": [
     "isomorphic",
