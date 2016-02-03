@@ -3,6 +3,8 @@ var expect = require("expect.js");
 var Promise = require("bluebird");
 var request = require("./server")(Promise);
 var server = require("../stubs/server.stub");
+var CustomError = require("error.js");
+
 describe("server", () => {
 
   it("should make a basic request", () => {
@@ -145,7 +147,7 @@ describe("server", () => {
     return server.start(200, (port) => {
       return request("http://localhost:" + port)
         .query("hello", "world")
-        .query({"foo": "bar"})
+        .query({"foo" : "bar"})
         .get()
         .then((response) => {
           expect(response).to.have.property("originalUrl", "/?hello=world&foo=bar");
@@ -219,11 +221,26 @@ describe("server", () => {
           throw new Error("fail");
         })
         .catch((error) => {
-          expect(error).to.have.keys("error", "requestBuilder", "response");
-          expect(error.response).to.have.property("statusCode", 500);
-          expect(error.response).to.have.property("statusMessage", "Internal Server Error");
-          expect(error.response).to.have.property("headers");
-          expect(error.response.headers).to.be.an(Object);
+          expect(error).to.have.keys("message","stack");
+          expect(error.message.response).to.have.property("statusCode", 500);
+          expect(error.message.response).to.have.property("statusMessage", "Internal Server Error");
+          expect(error.message.response).to.have.property("headers");
+          expect(error.message.response.headers).to.be.an(Object);
+        })
+    })
+  });
+
+  it("error should serialize", () => {
+    return server.start(500, (port) => {
+      return request("http://localhost:" + port)
+        .query({"hello" : "world"})
+        .query()
+        .get()
+        .then(() => {
+          throw new Error("fail");
+        })
+        .catch((err) => {
+          expect(CustomError.isCustom(err)).to.be(true);
         })
     })
   })

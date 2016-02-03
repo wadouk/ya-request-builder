@@ -1,12 +1,14 @@
 "use strict";
 
 var URI = require("urijs");
+var CustomError = require("error.js");
+var RequestRejected = CustomError.create("RequestRejected");
 
 var serializer = {
   error : (error) => {
     if (error) {
       return {
-        message : error.message || "no response or response ko",
+        message : error.message,
         stack : error.stack || error.toString(),
         name : error.name,
         code : error.code,
@@ -32,11 +34,14 @@ var serializer = {
     }
   },
   all : (error, requestBuilder, response) => {
-    return {
-      error : serializer.error(error),
-      requestBuilder : serializer.requestBuilder(requestBuilder),
-      response : serializer.response(response),
-    }
+    return new RequestRejected({
+      message : {
+        error : serializer.error(error),
+        requestBuilder : serializer.requestBuilder(requestBuilder),
+        response : serializer.response(response),
+      },
+      stack : error ? (error.stack || error.toString()) : "",
+    })
   }
 };
 
@@ -109,3 +114,4 @@ function instanciate(Promise, request) {
 }
 
 module.exports = instanciate;
+module.exports.Error = RequestRejected;
