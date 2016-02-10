@@ -4,7 +4,12 @@ var expect = require("expect.js");
 var Promise = require("bluebird");
 var request = require("./browser")(Promise);
 
+
 describe("browser", () => {
+  beforeEach(() => {
+    Promise.config({cancellation : true});
+  });
+
   it("should make a basic request", () => {
     return request("http://localhost:9876/ok")
       .get()
@@ -42,4 +47,35 @@ describe("browser", () => {
         expect(response).to.have.property("originalUrl", "/ok?hello=hel%C3%A9%C3%A8lo%C3%A7");
       })
   });
+
+  it("should not load the response if the server take to much time to answer", (done) => {
+    function delay(delay, cb) {
+      return Promise.delay(delay).then(cb);
+    }
+
+    var delayed = delay(20, () => {
+      return request("http://localhost:9876/delay").get();
+    });
+
+    var other = delay(40, () => {
+      delayed.cancel();
+    });
+
+    return Promise.join(other, delayed)
+      .finally(() => {
+        var status = {
+          canceled : delayed.isCancelled(),
+          fulfilled : delayed.isFulfilled(),
+          rejected : delayed.isRejected(),
+          pending : delayed.isPending(),
+          resolved : delayed.isResolved(),
+        };
+        try {
+          expect(status).to.have.property("canceled", true);
+          done();
+        } catch (e) {
+          done(e)
+        }
+      });
+  })
 });

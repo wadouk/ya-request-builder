@@ -89,6 +89,7 @@ function instanciate(Promise, request) {
 
   function resolvePromise(requestBuilder, resolve, reject) {
     return (error, response, body) => {
+
       if (error || (response && response.statusCode !== 200)) {
         return reject(serializer.all(error, requestBuilder, response));
       }
@@ -97,13 +98,17 @@ function instanciate(Promise, request) {
   }
 
   RequestBuilder.prototype.get = function send() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject, onCancel) => {
       try {
-        request.get({
+        var req = request.get({
           url : this.url.toString(),
           headers : this.headers,
           json : this.json
         }, resolvePromise(this, resolve, reject));
+
+        onCancel && onCancel(() => {
+          req.abort();
+        });
       } catch (e) {
         reject(serializer.all(e, this));
       }

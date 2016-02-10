@@ -71,6 +71,12 @@ module.exports = function (config) {
     preprocessors : {
       "src/**/*.spec.js" : ["browserify"],
     },
+    client : {
+      captureConsole : true,
+      mocha : {
+        reporter : 'html',
+      },
+    },
     browserify : {
       debug : true,
       transform : [["babelify", {"presets" : ["es2015"]}]],
@@ -82,6 +88,7 @@ module.exports = function (config) {
     },
     proxies : {
       '/ok' : 'http://localhost:6666/ok',
+      '/delay' : 'http://localhost:6666/delay',
       '/ko' : 'http://localhost:6666/ko',
       '/not-found' : 'http://localhost:6666/not-found',
     },

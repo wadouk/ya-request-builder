@@ -9,6 +9,12 @@ var server = app.listen(6666, ()=> {
 
 app.use("/ok", stub(200));
 
+app.use("/delay", (req, res) => {
+  setTimeout(() => {
+    stub(200)(req, res)
+  }, 5000);
+});
+
 app.use("/ko", stub(500));
 
 app.use("/not-found", stub(404));

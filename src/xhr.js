@@ -25,6 +25,11 @@ function xhr(options, callback) {
     req.setRequestHeader(header, options.headers[header]);
   });
   req.send(null);
+  return {
+    abort : () => {
+      req.abort();
+    }
+  };
 }
 
 module.exports = {
