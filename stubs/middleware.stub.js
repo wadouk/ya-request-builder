@@ -4,7 +4,6 @@ module.exports = (status) => {
   return (req, res) => {
     var data = [];
     req.on("data", (chunk) => {
-      console.log("chunk", chunk.toString());
       data.push(chunk);
     });
     req.on("end", () => {
@@ -12,6 +11,8 @@ module.exports = (status) => {
         data : data.toString(),
         headers : req.headers,
         originalUrl : req.originalUrl,
+        method : req.method,
+        body : req.body,
       });
     })
   }

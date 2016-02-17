@@ -3,6 +3,7 @@
 var URI = require("urijs");
 var CustomError = require("error.js");
 var RequestRejected = CustomError.create("RequestRejected");
+var assign = require("object-assign");
 
 var serializer = {
   error : (error) => {
@@ -87,6 +88,11 @@ function instanciate(Promise, request) {
     return this;
   };
 
+  RequestBuilder.prototype.body = function body(data) {
+    this.body = data;
+    return this;
+  };
+
   function resolvePromise(requestBuilder, resolve, reject) {
     return (error, response, body) => {
 
@@ -97,14 +103,14 @@ function instanciate(Promise, request) {
     };
   }
 
-  RequestBuilder.prototype.get = function send() {
+  RequestBuilder.prototype.send = function send(requestMethod, options) {
     return new Promise((resolve, reject, onCancel) => {
       try {
-        var req = request.get({
+        var req = requestMethod(assign({}, {
           url : this.url.toString(),
           headers : this.headers,
           json : this.json
-        }, resolvePromise(this, resolve, reject));
+        }, options), resolvePromise(this, resolve, reject));
 
         onCancel && onCancel(() => {
           req.abort();
@@ -113,6 +119,14 @@ function instanciate(Promise, request) {
         reject(serializer.all(e, this));
       }
     });
+  };
+
+  RequestBuilder.prototype.get = function get() {
+    return this.send(request.get);
+  };
+
+  RequestBuilder.prototype.post = function post() {
+    return this.send(request.post, {body : this.body})
   };
 
   return RequestBuilder;

@@ -7,6 +7,42 @@ var CustomError = require("error.js");
 
 describe("server", () => {
 
+  it("should launch post request", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port)
+        .post()
+        .then((response) => {
+          expect(response).to.have.property("method", "POST");
+        });
+    });
+  });
+
+  it("should add body to post request", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port)
+        .body({
+          test : "test",
+          other : {
+            something : "ok",
+          }
+        })
+        .post()
+        .then((response) => {
+          expect(response).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
+        });
+    });
+  });
+
+  it("should add body to post request with the right content-type", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port)
+        .post()
+        .then((response) => {
+          expect(response.headers).to.have.property("content-type", "application/json");
+        });
+    });
+  });
+
   it("should make a basic request", () => {
     return server.start(200, (port) => {
       return request("http://localhost:" + port)
