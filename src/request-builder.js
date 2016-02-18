@@ -103,30 +103,30 @@ function instanciate(Promise, request) {
     };
   }
 
-  RequestBuilder.prototype.send = function send(requestMethod, options) {
+  function send(requestBuilder, requestMethod, options) {
     return new Promise((resolve, reject, onCancel) => {
       try {
         var req = requestMethod(assign({}, {
-          url : this.url.toString(),
-          headers : this.headers,
-          json : this.json
-        }, options), resolvePromise(this, resolve, reject));
+          url : requestBuilder.url.toString(),
+          headers : requestBuilder.headers,
+          json : requestBuilder.json
+        }, options), resolvePromise(requestBuilder, resolve, reject));
 
         onCancel && onCancel(() => {
           req.abort();
         });
       } catch (e) {
-        reject(serializer.all(e, this));
+        reject(serializer.all(e, requestBuilder));
       }
     });
   };
 
   RequestBuilder.prototype.get = function get() {
-    return this.send(request.get);
+    return send(this, request.get);
   };
 
   RequestBuilder.prototype.post = function post() {
-    return this.send(request.post, {body : this.body})
+    return send(this, request.post, {body : this.body})
   };
 
   return RequestBuilder;

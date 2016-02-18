@@ -17,14 +17,14 @@ function onload(options, req, callback) {
   }
 }
 
-function xhr(options, callback) {
+function xhr(options, callback, method) {
   var req = new XMLHttpRequest();
-  req.open('GET', options.url, true);
+  req.open(method, options.url, true);
   req.onload = onload(options, req, callback);
   Object.keys(options.headers).forEach((header) => {
     req.setRequestHeader(header, options.headers[header]);
   });
-  req.send(null);
+  req.send(method === "POST" ? options.body : null);
   return {
     abort : () => {
       req.abort();
@@ -32,6 +32,15 @@ function xhr(options, callback) {
   };
 }
 
+function get(options, callback){
+  return xhr(options, callback, 'GET');
+}
+
+function post(options, callback){
+  return xhr(options, callback, 'POST');
+}
+
 module.exports = {
-  get : xhr
+  get : get,
+  post : post
 };

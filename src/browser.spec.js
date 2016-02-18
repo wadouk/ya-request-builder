@@ -10,6 +10,25 @@ describe("browser", () => {
     Promise.config({cancellation : true});
   });
 
+  it("should make a post request", () => {
+    return request("http://localhost:9876/ok")
+      .post()
+      .then((response) => {
+        expect(response).to.be.an(Object);
+        expect(response).to.have.property("method", "POST");
+      })
+  });
+
+  it("should make a post request with data", () => {
+    return request("http://localhost:9876/ok")
+      .body(JSON.stringify({"test":"test"}))
+      .post()
+      .then((response) => {
+        expect(response).to.have.property("data", '{"test":"test"}');
+      })
+  });
+
+
   it("should make a basic request", () => {
     return request("http://localhost:9876/ok")
       .get()
