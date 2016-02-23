@@ -96,7 +96,7 @@ function instanciate(Promise, request) {
   function resolvePromise(requestBuilder, resolve, reject) {
     return (error, response, body) => {
 
-      if (error || (response && !(response.statusCode >= 200 && response.statusCode <= 499))) {
+      if (error || (response && !(response.statusCode >= 200 && response.statusCode <= 299))) {
         return reject(serializer.all(error, requestBuilder, response));
       }
       return resolve(body);
