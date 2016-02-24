@@ -89,7 +89,7 @@ function instanciate(Promise, request) {
   };
 
   RequestBuilder.prototype.body = function body(data) {
-    this.body = data;
+    this._body = data;
     return this;
   };
 
@@ -126,7 +126,7 @@ function instanciate(Promise, request) {
   };
 
   RequestBuilder.prototype.post = function post() {
-    return send(this, request.post, {body : this.body})
+    return send(this, request.post, {body : this._body})
   };
 
   return RequestBuilder;
