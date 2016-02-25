@@ -123,7 +123,7 @@ function instanciate(Promise, request) {
 
   function methodFunc(method) {
     return function() {
-      return send(this, request[method], this.body ? {body : this._body} : null);
+      return send(this, request[method], this._body ? {body : this._body} : null);
     }
   }
 
