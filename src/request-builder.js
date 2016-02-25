@@ -51,7 +51,7 @@ function instanciate(Promise, request) {
     if ((this instanceof RequestBuilder)) {
       this.url = URI(fromUrl);
       this.headers = {};
-      this.json = true
+      this._json = true
     } else {
       return new RequestBuilder(fromUrl);
     }
@@ -67,7 +67,7 @@ function instanciate(Promise, request) {
   };
 
   RequestBuilder.prototype.json = function json(enable) {
-    this.json = enable;
+    this._json = enable;
     return this;
   };
 
@@ -109,7 +109,7 @@ function instanciate(Promise, request) {
         var req = requestMethod(assign({}, {
           url : requestBuilder.url.toString(),
           headers : requestBuilder.headers,
-          json : requestBuilder.json
+          json : requestBuilder._json
         }, options), resolvePromise(requestBuilder, resolve, reject));
 
         onCancel && onCancel(() => {
@@ -119,15 +119,16 @@ function instanciate(Promise, request) {
         reject(serializer.all(e, requestBuilder));
       }
     });
-  };
+  }
 
-  RequestBuilder.prototype.get = function get() {
-    return send(this, request.get);
-  };
+  function methodFunc(method) {
+    return function() {
+      return send(this, request[method], this.body ? {body : this._body} : null);
+    }
+  }
 
-  RequestBuilder.prototype.post = function post() {
-    return send(this, request.post, {body : this._body})
-  };
+  RequestBuilder.prototype.get = methodFunc("get");
+  RequestBuilder.prototype.post = methodFunc("post");
 
   return RequestBuilder;
 }

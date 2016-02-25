@@ -32,15 +32,13 @@ function xhr(options, callback, method) {
   };
 }
 
-function get(options, callback){
-  return xhr(options, callback, 'GET');
-}
-
-function post(options, callback){
-  return xhr(options, callback, 'POST');
+function methodFunc(method) {
+  return function(options, callback) {
+    return xhr(options, callback, method);
+  }
 }
 
 module.exports = {
-  get : get,
-  post : post
+  get : methodFunc("GET"),
+  post : methodFunc("POST"),
 };

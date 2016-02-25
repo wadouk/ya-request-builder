@@ -17,7 +17,7 @@ describe("server", () => {
     });
   });
 
-  it("should add body to post request", () => {
+  it("should add body to post request with the right content-type", () => {
     return server.start(200, (port) => {
       return request("http://localhost:" + port)
         .body({
@@ -29,15 +29,6 @@ describe("server", () => {
         .post()
         .then((response) => {
           expect(response).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
-        });
-    });
-  });
-
-  it("should add body to post request with the right content-type", () => {
-    return server.start(200, (port) => {
-      return request("http://localhost:" + port)
-        .post()
-        .then((response) => {
           expect(response.headers).to.have.property("content-type", "application/json");
         });
     });
