@@ -248,7 +248,7 @@ describe("server", () => {
           throw new Error("fail");
         })
         .catch((error) => {
-          expect(error).to.have.keys("message","stack");
+          expect(error).to.have.keys("message", "stack");
           expect(error.message.response).to.have.property("statusCode", 500);
           expect(error.message.response).to.have.property("statusMessage", "Internal Server Error");
           expect(error.message.response).to.have.property("headers");
@@ -268,7 +268,35 @@ describe("server", () => {
         })
         .catch((err) => {
           expect(CustomError.isCustom(err)).to.be(true);
-        })
-    })
+        });
+    });
+  });
+
+  describe("can inject cache", () => {
+    it("should not call the server when the cache is fulfilled, so answer the cache value", () => {
+      return server.start(200, (port) => {
+        return request("http://localhost:" + port)
+          .query({"hello" : "world"})
+          .before(() => Promise.resolve({cache : true}))
+          .get()
+          .then((result) => {
+            expect(result).to.have.property("cache", true);
+            expect(result).not.to.have.key("originalUrl");
+          })
+      });
+    });
+
+    it("should call the server when the cache is rejected, so answer the server value", () => {
+      return server.start(200, (port) => {
+        return request("http://localhost:" + port)
+          .query({"hello" : "world"})
+          .before(() => Promise.reject({cache : true}))
+          .get()
+          .then((result) => {
+            expect(result).to.have.property("originalUrl", "/?hello=world");
+            expect(result).not.to.have.key("cache");
+          })
+      });
+    });
   })
 });

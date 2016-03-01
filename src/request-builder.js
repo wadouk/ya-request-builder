@@ -48,24 +48,29 @@ var serializer = {
 
 function instanciate(Promise, request) {
   function send(method, requestBuilder) {
-    return () => {
-      return new Promise((resolve, reject, onCancel) => {
-        try {
-          var req = request({
-            method : method,
-            url : requestBuilder.url.toString(),
-            headers : requestBuilder.headers,
-            json : requestBuilder._json,
-            body : requestBuilder._body
-          }, resolvePromise(requestBuilder, resolve, reject));
+    function sendPromise(resolve, reject, onCancel) {
+      try {
+        var req = request({
+          method : method,
+          url : requestBuilder.url.toString(),
+          headers : requestBuilder.headers,
+          json : requestBuilder._json,
+          body : requestBuilder._body
+        }, resolvePromise(requestBuilder, resolve, reject));
 
-          onCancel && onCancel(() => {
-            req.abort();
-          });
-        } catch (e) {
-          reject(serializer.all(e, requestBuilder));
-        }
-      });
+        onCancel && onCancel(() => {
+          req.abort();
+        });
+      } catch (e) {
+        reject(serializer.all(e, requestBuilder));
+      }
+    }
+
+    return () => {
+      var answer = () => new Promise(sendPromise);
+      if (requestBuilder._before)
+        return requestBuilder._before().catch(answer);
+      return answer();
     }
   }
 
@@ -93,6 +98,11 @@ function instanciate(Promise, request) {
 
   RequestBuilder.prototype.json = function json(enable) {
     this._json = enable;
+    return this;
+  };
+
+  RequestBuilder.prototype.before = function before(promise) {
+    this._before = promise;
     return this;
   };
 
