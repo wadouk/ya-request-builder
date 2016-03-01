@@ -21,7 +21,7 @@ describe("browser", () => {
 
   it("should make a post request with data", () => {
     return request("http://localhost:9876/ok")
-      .body(JSON.stringify({"test":"test"}))
+      .body(JSON.stringify({"test" : "test"}))
       .post()
       .then((response) => {
         expect(response).to.have.property("data", '{"test":"test"}');
