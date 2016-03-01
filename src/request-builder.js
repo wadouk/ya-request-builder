@@ -51,7 +51,8 @@ function instanciate(Promise, request) {
     return () => {
       return new Promise((resolve, reject, onCancel) => {
         try {
-          var req = request[method]({
+          var req = request({
+            method : method,
             url : requestBuilder.url.toString(),
             headers : requestBuilder.headers,
             json : requestBuilder._json,
