@@ -21,13 +21,24 @@ function onload(options, req, callback) {
   }
 }
 
-function methodFunc(method) {
-  return function(options, callback) {
-    return xhr(options, callback, method);
+function xhr(method) {
+  return (options, callback) => {
+    var req = new XMLHttpRequest();
+    req.open(method, options.url, true);
+    req.onload = onload(options, req, callback);
+    Object.keys(options.headers).forEach((header) => {
+      req.setRequestHeader(header, options.headers[header]);
+    });
+    req.send(method === "POST" ? options.body : null);
+    return {
+      abort : () => {
+        req.abort();
+      }
+    };
   }
 }
 
 module.exports = {
-  get : methodFunc("GET"),
-  post : methodFunc("POST"),
+  get : xhr("GET"),
+  post : xhr("POST")
 };

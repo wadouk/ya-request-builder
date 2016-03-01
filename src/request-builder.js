@@ -47,11 +47,35 @@ var serializer = {
 };
 
 function instanciate(Promise, request) {
+  function send(method, requestBuilder) {
+    return () => {
+      return new Promise((resolve, reject, onCancel) => {
+        try {
+          var req = request[method]({
+            url : requestBuilder.url.toString(),
+            headers : requestBuilder.headers,
+            json : requestBuilder._json,
+            body : requestBuilder._body
+          }, resolvePromise(requestBuilder, resolve, reject));
+
+          onCancel && onCancel(() => {
+            req.abort();
+          });
+        } catch (e) {
+          reject(serializer.all(e, requestBuilder));
+        }
+      });
+    }
+  }
+
   function RequestBuilder(fromUrl) {
     if ((this instanceof RequestBuilder)) {
       this.url = URI(fromUrl);
       this.headers = {};
-      this._json = true
+      this._json = true;
+      ["get", "post"].forEach((method) => {
+        this[method] = send(method, this);
+      });
     } else {
       return new RequestBuilder(fromUrl);
     }
@@ -102,33 +126,6 @@ function instanciate(Promise, request) {
       return resolve(body);
     };
   }
-
-  function send(requestBuilder, requestMethod, options) {
-    return new Promise((resolve, reject, onCancel) => {
-      try {
-        var req = requestMethod(assign({}, {
-          url : requestBuilder.url.toString(),
-          headers : requestBuilder.headers,
-          json : requestBuilder._json
-        }, options), resolvePromise(requestBuilder, resolve, reject));
-
-        onCancel && onCancel(() => {
-          req.abort();
-        });
-      } catch (e) {
-        reject(serializer.all(e, requestBuilder));
-      }
-    });
-  }
-
-  function methodFunc(method) {
-    return function() {
-      return send(this, request[method], this._body ? {body : this._body} : null);
-    }
-  }
-
-  RequestBuilder.prototype.get = methodFunc("get");
-  RequestBuilder.prototype.post = methodFunc("post");
 
   return RequestBuilder;
 }
