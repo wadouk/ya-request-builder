@@ -8,6 +8,9 @@ var server = app.listen(6666, ()=> {
 });
 
 app.use("/ok", stub(200));
+app.use("/text", (req, res) => {
+  res.send("hello");
+});
 
 app.use("/delay", (req, res) => {
   setTimeout(() => {

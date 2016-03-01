@@ -88,6 +88,7 @@ module.exports = function (config) {
     },
     proxies : {
       '/ok' : 'http://localhost:6666/ok',
+      '/text' : 'http://localhost:6666/text',
       '/delay' : 'http://localhost:6666/delay',
       '/ko' : 'http://localhost:6666/ko',
       '/not-found' : 'http://localhost:6666/not-found',

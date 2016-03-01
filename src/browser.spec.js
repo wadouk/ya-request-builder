@@ -39,6 +39,23 @@ describe("browser", () => {
       })
   });
 
+  it("should fail properly if not json return", () => {
+    var delayed = request("http://localhost:9876/text").get();
+    return delayed.finally(() => {
+      var status = {
+        canceled : delayed.isCancelled(),
+        fulfilled : delayed.isFulfilled(),
+        rejected : delayed.isRejected(),
+        pending : delayed.isPending(),
+        resolved : delayed.isResolved(),
+      };
+      expect(status).to.have.property("rejected", true);
+      expect(status).to.have.property("resolved", true);
+    }).catch((e) => {
+      expect(e.message.error.name).to.be("SyntaxError");
+    });
+  });
+
   it("should write headers", () => {
     return request("http://localhost:9876/ok")
       .header("accept-language", "fr-fr")
