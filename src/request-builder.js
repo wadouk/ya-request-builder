@@ -67,9 +67,14 @@ function instanciate(Promise, request) {
     }
 
     return () => {
-      var answer = () => new Promise(sendPromise);
-      if (requestBuilder._before)
-        return requestBuilder._before().catch(answer);
+      var runToCache = (value) => {
+        requestBuilder._toCache(value);
+        return value;
+      };
+      var answer = () => new Promise(sendPromise).then(runToCache);
+      if (requestBuilder._fromCache) {
+        return requestBuilder._fromCache().catch(answer);
+      }
       return answer();
     }
   }
@@ -79,6 +84,8 @@ function instanciate(Promise, request) {
       this.url = URI(fromUrl);
       this.headers = {};
       this._json = true;
+      this._toCache = () => {
+      };
       ["get", "post"].forEach((method) => {
         this[method] = send(method, this);
       });
@@ -101,8 +108,13 @@ function instanciate(Promise, request) {
     return this;
   };
 
-  RequestBuilder.prototype.before = function before(promise) {
-    this._before = promise;
+  RequestBuilder.prototype.fromCache = function fromCache(promise) {
+    this._fromCache = promise;
+    return this;
+  };
+
+  RequestBuilder.prototype.toCache = function toCache(promise) {
+    this._toCache = promise;
     return this;
   };
 

@@ -1,6 +1,6 @@
 {
   "name": "ya-request-builder",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An isomorphic or universal http client that instanciate as builder",
   "main": "build/server.js",
   "browser": "build/browser.js",
@@ -17,6 +17,7 @@
     "test-karma-watch": "karma start karma.conf.js --singleRun false --autoWatch true",
     "postinstall": "babel --presets es2015 --ignore '**/*spec.js' src -d build"
   },
+  "repository": "https://github.com/wadouk/ya-request-builder.git",
   "keywords": [
     "isomorphic",
     "universal",

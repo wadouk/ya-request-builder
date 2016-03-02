@@ -275,28 +275,38 @@ describe("server", () => {
   describe("can inject cache", () => {
     it("should not call the server when the cache is fulfilled, so answer the cache value", () => {
       return server.start(200, (port) => {
+        var executed = false;
         return request("http://localhost:" + port)
           .query({"hello" : "world"})
-          .before(() => Promise.resolve({cache : true}))
+          .fromCache(() => Promise.resolve({cache : true}))
+          .toCache(() => {
+            executed = true;
+          })
           .get()
           .then((result) => {
             expect(result).to.have.property("cache", true);
             expect(result).not.to.have.key("originalUrl");
+            expect(executed).to.be(false);
           })
       });
     });
 
     it("should call the server when the cache is rejected, so answer the server value", () => {
       return server.start(200, (port) => {
+        var toCacheValue = false;
         return request("http://localhost:" + port)
           .query({"hello" : "world"})
-          .before(() => Promise.reject({cache : true}))
+          .fromCache(() => Promise.reject({cache : true}))
+          .toCache((value) => {
+            toCacheValue = value;
+          })
           .get()
           .then((result) => {
             expect(result).to.have.property("originalUrl", "/?hello=world");
             expect(result).not.to.have.key("cache");
+            expect(toCacheValue).to.eql(result);
           })
       });
     });
-  })
+  });
 });
