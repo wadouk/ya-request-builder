@@ -1,7 +1,8 @@
 "use strict";
 var expect = require("expect.js");
 var Promise = require("bluebird");
-var request = require("./server")(Promise);
+var requestBuilder = require("./server");
+var request = requestBuilder(Promise);
 var server = require("../stubs/server.stub");
 var CustomError = require("error.js");
 
@@ -307,6 +308,26 @@ describe("server", () => {
             expect(toCacheValue).to.eql(result);
           })
       });
+    });
+
+    it("in general use it but for specific case, disable it", () => {
+      return server.start(200, (port) => {
+        var executed = false;
+        return request("http://localhost:" + port)
+          .query({"hello" : "world"})
+          .fromCache(() => Promise.resolve({cache : true}))
+          .toCache(() => {
+            executed = true;
+          })
+          .cache(requestBuilder.cacheOptions.no)
+          .get()
+          .then((result) => {
+            expect(result).to.have.property("originalUrl", "/?hello=world");
+            expect(result).not.to.have.key("cache");
+            expect(executed).to.be(false);
+          })
+      });
+
     });
   });
 });
