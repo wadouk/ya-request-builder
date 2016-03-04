@@ -45,13 +45,6 @@ var serializer = {
     })
   }
 };
-function noop() {
-}
-
-function resetCache(rb) {
-  rb._toCache = noop;
-  delete rb._fromCache;
-}
 
 function instanciate(Promise, request) {
   function send(method, requestBuilder) {
@@ -73,12 +66,11 @@ function instanciate(Promise, request) {
       }
     }
 
-    function runToCache(value) {
-      requestBuilder._toCache(value);
-      return value;
-    }
-
     return () => {
+      var runToCache = (value) => {
+        requestBuilder._toCache(value);
+        return value;
+      };
       var answer = () => new Promise(sendPromise).then(runToCache);
       if (requestBuilder._fromCache) {
         return requestBuilder._fromCache().catch(answer);
@@ -92,8 +84,8 @@ function instanciate(Promise, request) {
       this.url = URI(fromUrl);
       this.headers = {};
       this._json = true;
-      resetCache(this);
-
+      this._toCache = () => {
+      };
       ["get", "post"].forEach((method) => {
         this[method] = send(method, this);
       });
@@ -148,13 +140,6 @@ function instanciate(Promise, request) {
     return this;
   };
 
-  RequestBuilder.prototype.cache = function cache(cacheOptions) {
-    if (cacheOptions === CACHE_OPTIONS.no) {
-      resetCache(this);
-    }
-    return this;
-  };
-
   function resolvePromise(requestBuilder, resolve, reject) {
     return (error, response, body) => {
 
@@ -167,10 +152,6 @@ function instanciate(Promise, request) {
 
   return RequestBuilder;
 }
-const CACHE_OPTIONS = {
-  'no' : 'no',
-};
 
 module.exports = instanciate;
 module.exports.Error = RequestRejected;
-module.exports.cacheOptions = CACHE_OPTIONS;
