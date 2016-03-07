@@ -2,10 +2,13 @@
 
 var Promise = require("bluebird");
 var stub = require("./middleware.stub");
+var gzipStub = require("./gzipMiddleware.stub");
+
 module.exports = {
   start : (statusCode, cb) => {
     var app = require("express")();
 
+    app.use("/gzip", gzipStub(statusCode));
     app.use("/", stub(statusCode));
 
     var port = parseInt(1024 + ((Math.random()) * 1000), 10);

@@ -55,7 +55,8 @@ function instanciate(Promise, request) {
           url : requestBuilder.url.toString(),
           headers : requestBuilder.headers,
           json : requestBuilder._json,
-          body : requestBuilder._body
+          body : requestBuilder._body,
+          gzip : requestBuilder._gzip,
         }, resolvePromise(requestBuilder, resolve, reject));
 
         onCancel && onCancel(() => {
@@ -79,6 +80,7 @@ function instanciate(Promise, request) {
       this.url = URI(fromUrl);
       this.headers = {};
       this._json = true;
+      this._gzip = true;
       ["get", "post"].forEach((method) => {
         this[method] = send(method, this);
       });
@@ -125,6 +127,11 @@ function instanciate(Promise, request) {
 
   RequestBuilder.prototype.body = function body(data) {
     this._body = data;
+    return this;
+  };
+
+  RequestBuilder.prototype.gzip = function gzip(enableGzip) {
+    this._gzip = enableGzip;
     return this;
   };
 
