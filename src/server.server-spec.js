@@ -34,9 +34,91 @@ describe("server", () => {
     });
   });
 
+  it("Should not fail when the response is not gzipped and the gzip flag has been explicitly set to false", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port)
+        .body({
+          test : "test",
+          other : {
+            something : "ok",
+          }
+        })
+        .gzip(false)
+        .post()
+        .then((response) => {
+          expect(response).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
+          expect(response.headers).to.have.property("content-type", "application/json");
+        });
+    });
+  });
+
+  it("should handle correctly the body of a post request when the response is gzipped, without having to", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port + "/gzip")
+        .body({
+          test : "test",
+          other : {
+            something : "ok",
+          }
+        })
+        .post()
+        .then((response) => {
+          expect(response).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
+          expect(response.headers).to.have.property("content-type", "application/json");
+        });
+    });
+  });
+
+  it("should handle correctly the body of a post request when the response is gzipped, and having explicitly set the gzip flag", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port + "/gzip")
+        .body({
+          test : "test",
+          other : {
+            something : "ok",
+          }
+        })
+        .gzip(true)
+        .post()
+        .then((response) => {
+          expect(response).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
+          expect(response.headers).to.have.property("content-type", "application/json");
+        });
+    });
+  });
+
+  it("The query should fail when the response is zipped and the gzip flag has been explicitly set to false", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port + "/gzip")
+        .body({
+          test : "test",
+          other : {
+            something : "ok",
+          }
+        })
+        .gzip(false)
+        .post()
+        .then((response) => {
+          expect(response).to.be.undefined;
+        });
+    });
+  });
+
   it("should make a basic request", () => {
     return server.start(200, (port) => {
       return request("http://localhost:" + port)
+        .get()
+        .then((response) => {
+          expect(response).to.be.an(Object);
+          expect(response).to.have.property("data", "");
+          expect(response).to.have.property("headers");
+        })
+    })
+  });
+
+  it("should make a basic gzipped request", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port + "/gzip")
         .get()
         .then((response) => {
           expect(response).to.be.an(Object);
