@@ -112,6 +112,7 @@ describe("server", () => {
           expect(response).to.be.an(Object);
           expect(response).to.have.property("data", "");
           expect(response).to.have.property("headers");
+          expect(response.headers).to.have.property("accept", "application/json");
         })
     })
   });

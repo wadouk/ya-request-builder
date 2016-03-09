@@ -21,10 +21,12 @@ describe("browser", () => {
 
   it("should make a post request with data", () => {
     return request("http://localhost:9876/ok")
-      .body(JSON.stringify({"test" : "test"}))
+      .body({"test" : "test"})
       .post()
       .then((response) => {
         expect(response).to.have.property("data", '{"test":"test"}');
+        expect(response).to.have.property("headers");
+        expect(response.headers).to.have.property("content-type", "application/json");
       })
   });
 
@@ -36,6 +38,7 @@ describe("browser", () => {
         expect(response).to.be.an(Object);
         expect(response).to.have.property("data", "");
         expect(response).to.have.property("headers");
+        expect(response.headers).to.have.property("accept", "application/json");
       })
   });
 

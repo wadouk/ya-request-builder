@@ -21,14 +21,27 @@ function onload(options, req, callback) {
   }
 }
 
+function body(options) {
+  if (options.method.match(/POST/gi)) {
+    options.headers["content-type"] = "application/json";
+    return JSON.stringify(options.body);
+  }
+}
+
 function xhr(options, callback) {
   var req = new XMLHttpRequest();
   req.open(options.method, options.url, true);
   req.onload = onload(options, req, callback);
+
+  if (options.json) {
+    options.headers["accept"] = "application/json";
+  }
+  var data = body(options);
   Object.keys(options.headers).forEach((header) => {
     req.setRequestHeader(header, options.headers[header]);
   });
-  req.send(options.method.match(/POST/gi) ? options.body : null);
+
+  req.send(data);
   return {
     abort : () => {
       req.abort();
