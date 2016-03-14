@@ -30,11 +30,13 @@ var serializer = {
       return {
         statusCode : response.statusCode,
         statusMessage : response.statusMessage,
-        headers : response.headers
+        headers : response.headers,
+        body : response.body,
       }
     }
   },
   all : (error, requestBuilder, response) => {
+    console.log(response);
     return new RequestRejected({
       message : {
         error : serializer.error(error),
