@@ -36,7 +36,6 @@ var serializer = {
     }
   },
   all : (error, requestBuilder, response) => {
-    console.log(response);
     return new RequestRejected({
       message : {
         error : serializer.error(error),
