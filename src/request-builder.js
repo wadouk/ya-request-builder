@@ -30,7 +30,8 @@ var serializer = {
       return {
         statusCode : response.statusCode,
         statusMessage : response.statusMessage,
-        headers : response.headers
+        headers : response.headers,
+        body : response.body,
       }
     }
   },
