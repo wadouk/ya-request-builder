@@ -17,6 +17,36 @@ describe("server", () => {
     });
   });
 
+  it("should launch patch request", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port)
+        .patch()
+        .then((response) => {
+          expect(response).to.have.property("method", "PATCH");
+        });
+    });
+  });
+
+  it("should launch put request", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port)
+        .put()
+        .then((response) => {
+          expect(response).to.have.property("method", "PUT");
+        });
+    });
+  });
+
+  it("should launch del request", () => {
+    return server.start(200, (port) => {
+      return request("http://localhost:" + port)
+        .delete()
+        .then((response) => {
+          expect(response).to.have.property("method", "DELETE");
+        });
+    });
+  });
+
   it("should add body to post request with the right content-type", () => {
     return server.start(200, (port) => {
       return request("http://localhost:" + port)
