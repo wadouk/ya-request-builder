@@ -89,7 +89,7 @@ function instanciate(Promise, request) {
       this._gzip = true;
       this._toCache = () => {
       };
-      ["get", "post"].forEach((method) => {
+      ["get", "post", "patch", "put", "delete"].forEach((method) => {
         this[method] = send(method, this);
       });
     } else {
