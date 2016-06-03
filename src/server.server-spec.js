@@ -12,7 +12,7 @@ describe("server", () => {
       return request("http://localhost:" + port)
         .post()
         .then((response) => {
-          expect(response).to.have.property("method", "POST");
+          expect(response.body).to.have.property("method", "POST");
         });
     });
   });
@@ -22,7 +22,7 @@ describe("server", () => {
       return request("http://localhost:" + port)
         .patch()
         .then((response) => {
-          expect(response).to.have.property("method", "PATCH");
+          expect(response.body).to.have.property("method", "PATCH");
         });
     });
   });
@@ -32,7 +32,7 @@ describe("server", () => {
       return request("http://localhost:" + port)
         .put()
         .then((response) => {
-          expect(response).to.have.property("method", "PUT");
+          expect(response.body).to.have.property("method", "PUT");
         });
     });
   });
@@ -42,7 +42,7 @@ describe("server", () => {
       return request("http://localhost:" + port)
         .delete()
         .then((response) => {
-          expect(response).to.have.property("method", "DELETE");
+          expect(response.body).to.have.property("method", "DELETE");
         });
     });
   });
@@ -58,8 +58,8 @@ describe("server", () => {
         })
         .post()
         .then((response) => {
-          expect(response).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
-          expect(response.headers).to.have.property("content-type", "application/json");
+          expect(response.body).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
+          expect(response.body.headers).to.have.property("content-type", "application/json");
         });
     });
   });
@@ -76,8 +76,8 @@ describe("server", () => {
         .gzip(false)
         .post()
         .then((response) => {
-          expect(response).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
-          expect(response.headers).to.have.property("content-type", "application/json");
+          expect(response.body).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
+          expect(response.body.headers).to.have.property("content-type", "application/json");
         });
     });
   });
@@ -93,8 +93,8 @@ describe("server", () => {
         })
         .post()
         .then((response) => {
-          expect(response).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
-          expect(response.headers).to.have.property("content-type", "application/json");
+          expect(response.body).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
+          expect(response.body.headers).to.have.property("content-type", "application/json");
         });
     });
   });
@@ -111,8 +111,8 @@ describe("server", () => {
         .gzip(true)
         .post()
         .then((response) => {
-          expect(response).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
-          expect(response.headers).to.have.property("content-type", "application/json");
+          expect(response.body).to.have.property("data", '{"test":"test","other":{"something":"ok"}}');
+          expect(response.body.headers).to.have.property("content-type", "application/json");
         });
     });
   });
@@ -129,7 +129,7 @@ describe("server", () => {
         .gzip(false)
         .post()
         .then((response) => {
-          expect(response).to.be.undefined;
+          expect(response.body).to.be.undefined;
         });
     });
   });
@@ -139,10 +139,10 @@ describe("server", () => {
       return request("http://localhost:" + port)
         .get()
         .then((response) => {
-          expect(response).to.be.an(Object);
-          expect(response).to.have.property("data", "");
-          expect(response).to.have.property("headers");
-          expect(response.headers).to.have.property("accept", "application/json");
+          expect(response.body).to.be.an(Object);
+          expect(response.body).to.have.property("data", "");
+          expect(response.body).to.have.property("headers");
+          expect(response.body.headers).to.have.property("accept", "application/json");
         })
     })
   });
@@ -152,9 +152,9 @@ describe("server", () => {
       return request("http://localhost:" + port + "/gzip")
         .get()
         .then((response) => {
-          expect(response).to.be.an(Object);
-          expect(response).to.have.property("data", "");
-          expect(response).to.have.property("headers");
+          expect(response.body).to.be.an(Object);
+          expect(response.body).to.have.property("data", "");
+          expect(response.body).to.have.property("headers");
         })
     })
   });
@@ -165,7 +165,7 @@ describe("server", () => {
         .header("accept-language", "fr-fr")
         .get()
         .then((response) => {
-          expect(response.headers).to.have.property("accept-language", "fr-fr");
+          expect(response.body.headers).to.have.property("accept-language", "fr-fr");
         })
     })
   });
@@ -177,7 +177,7 @@ describe("server", () => {
         .header({"accept-language" : "en-en"})
         .get()
         .then((response) => {
-          expect(response.headers).to.have.property("accept-language", "en-en");
+          expect(response.body.headers).to.have.property("accept-language", "en-en");
         })
     })
   });
@@ -189,7 +189,7 @@ describe("server", () => {
         .header()
         .get()
         .then((response) => {
-          expect(response.headers).to.not.have.key("accept-language");
+          expect(response.body.headers).to.not.have.key("accept-language");
         })
     })
   });
@@ -200,7 +200,7 @@ describe("server", () => {
         .path(["h", "b"])
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/h/b");
+          expect(response.body).to.have.property("originalUrl", "/h/b");
         })
     })
   });
@@ -211,7 +211,7 @@ describe("server", () => {
         .path(["h", undefined])
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/h");
+          expect(response.body).to.have.property("originalUrl", "/h");
         })
     })
   });
@@ -222,7 +222,7 @@ describe("server", () => {
         .path("h", "b")
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/h/b");
+          expect(response.body).to.have.property("originalUrl", "/h/b");
         })
     })
   });
@@ -233,7 +233,7 @@ describe("server", () => {
         .path("h", "b")
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/path/h/b");
+          expect(response.body).to.have.property("originalUrl", "/path/h/b");
         })
     })
   });
@@ -244,7 +244,7 @@ describe("server", () => {
         .path("b")
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/path/h/b");
+          expect(response.body).to.have.property("originalUrl", "/path/h/b");
         })
     })
   });
@@ -255,7 +255,7 @@ describe("server", () => {
         .path([])
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/");
+          expect(response.body).to.have.property("originalUrl", "/");
         })
     })
   });
@@ -266,7 +266,7 @@ describe("server", () => {
         .query("hello", "world")
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/?hello=world");
+          expect(response.body).to.have.property("originalUrl", "/?hello=world");
         })
     })
   });
@@ -278,7 +278,7 @@ describe("server", () => {
         .query("foo", "bar")
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/?hello=world&foo=bar");
+          expect(response.body).to.have.property("originalUrl", "/?hello=world&foo=bar");
         })
     })
   });
@@ -290,7 +290,7 @@ describe("server", () => {
         .query({"foo" : "bar"})
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/?hello=world&foo=bar");
+          expect(response.body).to.have.property("originalUrl", "/?hello=world&foo=bar");
         })
     })
   });
@@ -301,7 +301,7 @@ describe("server", () => {
         .query("hello", undefined)
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/");
+          expect(response.body).to.have.property("originalUrl", "/");
         })
     })
   });
@@ -312,7 +312,7 @@ describe("server", () => {
         .query("hello", "heléèloç")
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/?hello=hel%C3%A9%C3%A8lo%C3%A7");
+          expect(response.body).to.have.property("originalUrl", "/?hello=hel%C3%A9%C3%A8lo%C3%A7");
         })
     })
   });
@@ -323,7 +323,7 @@ describe("server", () => {
         .query({"hello" : "world"})
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/?hello=world");
+          expect(response.body).to.have.property("originalUrl", "/?hello=world");
         })
     })
   });
@@ -334,7 +334,7 @@ describe("server", () => {
         .query({"hello" : undefined})
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/");
+          expect(response.body).to.have.property("originalUrl", "/");
         })
     })
   });
@@ -346,33 +346,24 @@ describe("server", () => {
         .query()
         .get()
         .then((response) => {
-          expect(response).to.have.property("originalUrl", "/");
+          expect(response.body).to.have.property("originalUrl", "/");
         })
     })
   });
 
   it("should get error when it fail", () => {
-    return server.start(500, (port) => {
-      return request("http://localhost:" + port)
-        .query({"hello" : "world"})
-        .query()
+    return server.start(200, (port) => {
+      return request("badhttpstuf")
         .get()
-        .then(() => {
-          throw new Error("fail");
-        })
         .catch((error) => {
-          expect(error).to.have.keys("message", "stack");
-          expect(error.message.response).to.have.property("statusCode", 500);
-          expect(error.message.response).to.have.property("statusMessage", "Internal Server Error");
-          expect(error.message.response).to.have.property("headers");
-          expect(error.message.response.headers).to.be.an(Object);
+          expect(error).to.have.keys("message", "stack", "url", "headers");
         })
     })
   });
 
   it("error should serialize", () => {
-    return server.start(500, (port) => {
-      return request("http://localhost:" + port)
+    return server.start(200, (port) => {
+      return request("badhttpstuff")
         .query({"hello" : "world"})
         .query()
         .get()
@@ -414,10 +405,10 @@ describe("server", () => {
             toCacheValue = value;
           })
           .get()
-          .then((result) => {
-            expect(result).to.have.property("originalUrl", "/?hello=world");
-            expect(result).not.to.have.key("cache");
-            expect(toCacheValue).to.eql(result);
+          .then((response) => {
+            expect(response.body).to.have.property("originalUrl", "/?hello=world");
+            expect(response.body).not.to.have.key("cache");
+            expect(toCacheValue).to.eql(response);
           })
       });
     });

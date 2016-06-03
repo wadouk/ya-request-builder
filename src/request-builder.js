@@ -2,36 +2,16 @@
 
 var URI = require("urijs");
 var CustomError = require("error.js");
-var RequestRejected = CustomError.create("RequestRejected");
+var RequestFailed = CustomError.create("RequestFailed");
 var assign = require("object-assign");
 
-var serializer = {
-  error : (error) => {
-    if (error) {
-      return {
-        message : error.message,
-        stack : error.stack || error.toString(),
-        name : error.name,
-        code : error.code,
-        signal : error.signal,
-      }
-    }
-    return error;
-  },
-  requestBuilder : (requestBuilder) => {
-    return {
-      method : "GET",
-      url : requestBuilder.url.toString(),
-      headers : requestBuilder.headers,
-    }
-  }
-  all : (error, requestBuilder) => {
-    return new RequestRejected({
-      message : error.message,
-      requestBuilder : serializer.requestBuilder(requestBuilder),
-      stack : error ? (error.stack || error.toString()) : "",
-    })
-  }
+function serializeError(error, requestBuilder) {
+  return new RequestFailed({
+    message : error.message,
+    url : requestBuilder.url.toString(),
+    headers : requestBuilder.headers,
+    stack : error ? (error.stack || error.toString()) : "",
+  })
 };
 
 function instanciate(Promise, request) {
@@ -51,7 +31,7 @@ function instanciate(Promise, request) {
           req.abort();
         });
       } catch (e) {
-        reject(serializer.all(e, requestBuilder));
+        reject(serializeError(e, requestBuilder));
       }
     }
 
@@ -136,12 +116,11 @@ function instanciate(Promise, request) {
   };
 
   function resolvePromise(requestBuilder, resolve, reject) {
-    return (error, response, body) => {
-
-      if (error || (response && !(response.statusCode >= 200 && response.statusCode <= 299))) {
-        return reject(serializer.all(error, requestBuilder));
+    return (error, response) => {
+      if (error) {
+        return reject(serializeError(error, requestBuilder));
       }
-      return resolve(body);
+      return resolve(response);
     };
   }
 
@@ -149,4 +128,4 @@ function instanciate(Promise, request) {
 }
 
 module.exports = instanciate;
-module.exports.Error = RequestRejected;
+module.exports.Error = RequestFailed;

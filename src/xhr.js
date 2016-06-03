@@ -14,9 +14,11 @@ function onload(options, req, callback) {
 
     try {
       var body = options.json ? JSON.parse(req.responseText) : req.responseText;
-      callback(null, response, body);
+      response.body = body;
+      callback(null, response);
     } catch (e) {
-      callback(e, response, req.responseText)
+      response.body = req.responseText;
+      callback(e, response)
     }
   }
 }
