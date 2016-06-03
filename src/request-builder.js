@@ -3,7 +3,6 @@
 var URI = require("urijs");
 var CustomError = require("error.js");
 var RequestFailed = CustomError.create("RequestFailed");
-var assign = require("object-assign");
 
 function serializeError(error, requestBuilder) {
   return new RequestFailed({

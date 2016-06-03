@@ -30,7 +30,6 @@
   "dependencies": {
     "error.js": "1.2.1",
     "request": "2.71.0",
-    "object-assign": "4.0.1",
     "urijs": "1.17.0"
   },
   "devDependencies": {
