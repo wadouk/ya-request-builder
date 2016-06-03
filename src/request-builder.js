@@ -24,24 +24,11 @@ var serializer = {
       url : requestBuilder.url.toString(),
       headers : requestBuilder.headers,
     }
-  },
-  response : (response) => {
-    if (response) {
-      return {
-        statusCode : response.statusCode,
-        statusMessage : response.statusMessage,
-        headers : response.headers,
-        body : response.body,
-      }
-    }
-  },
-  all : (error, requestBuilder, response) => {
+  }
+  all : (error, requestBuilder) => {
     return new RequestRejected({
-      message : {
-        error : serializer.error(error),
-        requestBuilder : serializer.requestBuilder(requestBuilder),
-        response : serializer.response(response),
-      },
+      message : error.message,
+      requestBuilder : serializer.requestBuilder(requestBuilder),
       stack : error ? (error.stack || error.toString()) : "",
     })
   }
@@ -152,7 +139,7 @@ function instanciate(Promise, request) {
     return (error, response, body) => {
 
       if (error || (response && !(response.statusCode >= 200 && response.statusCode <= 299))) {
-        return reject(serializer.all(error, requestBuilder, response));
+        return reject(serializer.all(error, requestBuilder));
       }
       return resolve(body);
     };
