@@ -3,7 +3,8 @@
 var expect = require("expect.js");
 var Promise = require("bluebird");
 var request = require("./browser")(Promise);
-
+var CustomError = require("error.js");
+var RequestFailed = CustomError.create("RequestFailed");
 
 describe("browser", () => {
   beforeEach(() => {
@@ -14,8 +15,8 @@ describe("browser", () => {
     return request("http://localhost:9876/ok")
       .post()
       .then((response) => {
-        expect(response).to.be.an(Object);
-        expect(response).to.have.property("method", "POST");
+        expect(response.body).to.be.an(Object);
+        expect(response.body).to.have.property("method", "POST");
       })
   });
 
@@ -24,9 +25,9 @@ describe("browser", () => {
       .body({"test" : "test"})
       .post()
       .then((response) => {
-        expect(response).to.have.property("data", '{"test":"test"}');
-        expect(response).to.have.property("headers");
-        expect(response.headers).to.have.property("content-type", "application/json");
+        expect(response.body).to.have.property("data", '{"test":"test"}');
+        expect(response.body).to.have.property("headers");
+        expect(response.body.headers).to.have.property("content-type", "application/json");
       })
   });
 
@@ -35,10 +36,10 @@ describe("browser", () => {
     return request("http://localhost:9876/ok")
       .get()
       .then((response) => {
-        expect(response).to.be.an(Object);
-        expect(response).to.have.property("data", "");
-        expect(response).to.have.property("headers");
-        expect(response.headers).to.have.property("accept", "application/json");
+        expect(response.body).to.be.an(Object);
+        expect(response.body).to.have.property("data", "");
+        expect(response.body).to.have.property("headers");
+        expect(response.body.headers).to.have.property("accept", "application/json");
       })
   });
 
@@ -55,7 +56,7 @@ describe("browser", () => {
       expect(status).to.have.property("rejected", true);
       expect(status).to.have.property("resolved", true);
     }).catch((e) => {
-      expect(e.message.error.name).to.be("SyntaxError");
+      expect(e.name).to.be("RequestFailed");
     });
   });
 
@@ -65,7 +66,7 @@ describe("browser", () => {
       .query("ts", Date.now())
       .get()
       .then((response) => {
-        expect(response.headers).to.have.property("accept-language", "fr-fr");
+        expect(response.body.headers).to.have.property("accept-language", "fr-fr");
       })
   });
 
@@ -74,7 +75,7 @@ describe("browser", () => {
       .query("hello", "world")
       .get()
       .then((response) => {
-        expect(response).to.have.property("originalUrl", "/ok?hello=world");
+        expect(response.body).to.have.property("originalUrl", "/ok?hello=world");
       })
   });
 
@@ -83,7 +84,7 @@ describe("browser", () => {
       .query("hello", "heléèloç")
       .get()
       .then((response) => {
-        expect(response).to.have.property("originalUrl", "/ok?hello=hel%C3%A9%C3%A8lo%C3%A7");
+        expect(response.body).to.have.property("originalUrl", "/ok?hello=hel%C3%A9%C3%A8lo%C3%A7");
       })
   });
 
