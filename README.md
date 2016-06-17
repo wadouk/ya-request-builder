@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/wadouk/ya-request-builder.svg?branch=master)](https://travis-ci.org/wadouk/ya-request-builder)
+[![Sauce Test Status](https://saucelabs.com/buildstatus/ya-request-builder)](https://saucelabs.com/u/ya-request-builder)
 
 # Isomorphic or universal http client because no one exist like I need
 
@@ -28,3 +29,7 @@ All I need to do
 
 - I need two implementations of the request : one with request and the other with XmlHTTPRequest
 - Handle the response as promise because it's better than callbacks
+
+# Browser support 
+
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/ya-request-builder.svg)](https://saucelabs.com/u/ya-request-builder)
