@@ -1,6 +1,6 @@
 {
   "name": "ya-request-builder",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "An isomorphic or universal http client that instanciate as builder",
   "main": "build/server.js",
   "browser": "build/browser.js",
