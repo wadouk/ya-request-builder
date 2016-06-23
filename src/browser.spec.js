@@ -60,6 +60,23 @@ describe("browser", () => {
     });
   });
 
+  it("should fail if connection refused", () => {
+    var delayed = request("http://localhost/text").get();
+    return delayed.finally(() => {
+      var status = {
+        canceled : delayed.isCancelled(),
+        fulfilled : delayed.isFulfilled(),
+        rejected : delayed.isRejected(),
+        pending : delayed.isPending(),
+        resolved : delayed.isResolved(),
+      };
+      expect(status).to.have.property("rejected", true);
+      expect(status).to.have.property("resolved", true);
+    }).catch((e) => {
+      expect(e.name).to.be("RequestFailed");
+    });
+  });
+
   it("should write headers", () => {
     return request("http://localhost:9876/ok")
       .header("accept-language", "fr-fr")

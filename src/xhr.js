@@ -34,6 +34,9 @@ function xhr(options, callback) {
   var req = new XMLHttpRequest();
   req.open(options.method, options.url, true);
   req.onload = onload(options, req, callback);
+  req.onerror = (e) => {
+    callback(e, null);
+  };
 
   if (options.json) {
     options.headers["accept"] = "application/json";
