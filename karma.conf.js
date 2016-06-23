@@ -1,5 +1,3 @@
-var assign = require("object-assign");
-
 function browsers() {
   if (process.env.SAUCE_USERNAME && process.env.SAUCE_ACCESS_KEY) {
     var customLaunchers = {
@@ -61,7 +59,7 @@ function browsers() {
 }
 
 module.exports = function (config) {
-  config.set(assign({}, {
+  config.set(Object.assign({}, {
     basePath : '',
     frameworks : ['browserify', 'mocha'],
     files : [
