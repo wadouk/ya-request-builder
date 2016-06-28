@@ -42,7 +42,9 @@ function xhr(options, callback) {
     options.headers["accept"] = "application/json";
   }
 
-  req.withCredentials = options.withCredentials;
+  if (typeof(req.withCredentials) !== "undefined" && options.withCredentials) {
+    req.withCredentials = true;
+  }
 
   var data = body(options);
   Object.keys(options.headers).forEach((header) => {
