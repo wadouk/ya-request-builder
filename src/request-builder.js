@@ -24,6 +24,7 @@ function instanciate(Promise, request) {
           json : requestBuilder._json,
           body : requestBuilder._body,
           gzip : requestBuilder._gzip,
+          withCredentials : requestBuilder._withCredentials,
         }, resolvePromise(requestBuilder, resolve, reject));
 
         onCancel && onCancel(() => {
@@ -53,6 +54,7 @@ function instanciate(Promise, request) {
       this.headers = {};
       this._json = true;
       this._gzip = true;
+      this._withCredentials = false;
       this._toCache = () => {
       };
       ["get", "post", "patch", "put", "delete"].forEach((method) => {
@@ -111,6 +113,11 @@ function instanciate(Promise, request) {
 
   RequestBuilder.prototype.gzip = function gzip(enableGzip) {
     this._gzip = enableGzip;
+    return this;
+  };
+
+  RequestBuilder.prototype.withCredentials = function withCredentials(enableWithCredentials) {
+    this._withCredentials = enableWithCredentials;
     return this;
   };
 

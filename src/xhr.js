@@ -41,6 +41,9 @@ function xhr(options, callback) {
   if (options.json) {
     options.headers["accept"] = "application/json";
   }
+
+  req.withCredentials = (options.withCredentials);
+
   var data = body(options);
   Object.keys(options.headers).forEach((header) => {
     req.setRequestHeader(header, options.headers[header]);
