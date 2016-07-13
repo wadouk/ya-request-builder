@@ -89,6 +89,8 @@ module.exports = function (config) {
       '/text' : 'http://localhost:6666/text',
       '/delay' : 'http://localhost:6666/delay',
       '/ko' : 'http://localhost:6666/ko',
+      '/empty' : 'http://localhost:6666/empty',
+      '/unauthorized' : 'http://localhost:6666/unauthorized',
       '/not-found' : 'http://localhost:6666/not-found',
     },
     port : 9876,

@@ -43,6 +43,27 @@ describe("browser", () => {
       })
   });
 
+  it("should make a basic request and manage empty body", () => {
+    return request("http://localhost:9876/empty")
+      .get()
+      .then((response) => {
+        expect(response.statusCode).to.equal(204);
+        expect(response.body).to.be.undefined;
+      })
+  });
+
+  it("should make a basic request and manage 401 unauthorized", () => {
+    return request("http://localhost:9876/unauthorized")
+      .get()
+      .then((response) => {
+        expect(response.statusCode).to.equal(401)
+        expect(response.body).to.be.an(Object);
+        expect(response.body).to.have.property("data", "");
+        expect(response.body).to.have.property("headers");
+        expect(response.body.headers).to.have.property("accept", "application/json");
+      })
+  });
+
   it("should fail properly if not json return", () => {
     var delayed = request("http://localhost:9876/text").get();
     return delayed.finally(() => {

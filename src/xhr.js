@@ -1,21 +1,30 @@
 "use strict";
 
+var objectAssign = require('object-assign');
+
 function onload(options, req, callback) {
   return () => {
+    function setBody(response) {
+      if (req.responseText.length) {
+        var body = options.json ? JSON.parse(req.responseText) : req.responseText;
+        return objectAssign({}, {body: body}, response);
+      }
+      return objectAssign({}, response);
+    }
+
     var response = {
       statusCode : req.status,
       statusMessage : req.statusText,
-      headers : req.getAllResponseHeaders().split(/\r\n/g).reduce((headers, headerLine) => {
-        const tuple = headerLine.split(/: /);
-        headers[tuple[0]] = tuple[1];
-        return headers;
-      }, {}),
+      headers : req.getAllResponseHeaders().split(/\r\n/g).filter((headerLine) => headerLine.length)
+        .reduce((headers, headerLine) => {
+          const tuple = headerLine.split(/: /);
+          headers[tuple[0]] = tuple[1];
+          return headers;
+        }, {}),
     };
 
     try {
-      var body = options.json ? JSON.parse(req.responseText) : req.responseText;
-      response.body = body;
-      callback(null, response);
+      callback(null, setBody(response));
     } catch (e) {
       response.body = req.responseText;
       callback(e, response)
