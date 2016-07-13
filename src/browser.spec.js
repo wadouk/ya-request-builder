@@ -47,7 +47,6 @@ describe("browser", () => {
     return request("http://localhost:9876/empty")
       .get()
       .then((response) => {
-        expect(response.statusCode).to.equal(204);
         expect(response.body).to.be.undefined;
       })
   });
@@ -56,7 +55,6 @@ describe("browser", () => {
     return request("http://localhost:9876/unauthorized")
       .get()
       .then((response) => {
-        expect(response.statusCode).to.equal(401)
         expect(response.body).to.be.an(Object);
         expect(response.body).to.have.property("data", "");
         expect(response.body).to.have.property("headers");

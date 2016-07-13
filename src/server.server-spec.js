@@ -420,7 +420,6 @@ describe("server", () => {
         .header("Cache-Control", "no-cache")
         .get()
         .then((response) => {
-          expect(response.statusCode).to.equal(204)
           expect(response.body).to.be.undefined;
         })
     })
@@ -432,7 +431,6 @@ describe("server", () => {
         .header("Cache-Control", "no-cache")
         .get()
         .then((response) => {
-          expect(response.statusCode).to.equal(401)
           expect(response.body).to.be.an(Object);
           expect(response.body).to.have.property("data", "");
           expect(response.body).to.have.property("headers");
