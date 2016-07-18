@@ -9,7 +9,7 @@ function onload(options, req, callback) {
         var body = options.json ? JSON.parse(req.responseText) : req.responseText;
         return objectAssign({}, {body: body}, response);
       }
-      return objectAssign({}, response);
+      return response;
     }
 
     var response = {
