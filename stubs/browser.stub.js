@@ -22,6 +22,10 @@ app.use("/ko", stub(500));
 
 app.use("/not-found", stub(404));
 
+app.use("/empty", stub(204));
+
+app.use("/unauthorized", stub(401));
+
 app.use("/stop", (req, res) => {
   res.sendStatus(200);
   server.close();
