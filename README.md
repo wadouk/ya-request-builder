@@ -20,10 +20,9 @@ As builder because :
 
 Yet another because so much alternatives already exists but no one fully worked :
 
-- [superagent](https://www.npmjs.com/package/superagent) & [superagent proxy](https://www.npmjs.com/package/superagent-proxy) doesn't make the isomorphic way
-- as it doesn't work on https but probably a but of proxy-agent
+- [superagent](https://www.npmjs.com/package/superagent) & [superagent proxy](https://www.npmjs.com/package/superagent-proxy) doesn't make the isomorphic way as. As it doesn't work on https but probably should use proxy-agent
 - [request](https://www.npmjs.com/package/request) & [browserify](https://www.npmjs.com/package/browserify) for a simple get has 1.8M bundled (unminified unmangled)
-- [iso-http](https://www.npmjs.com/package/iso-http) doesn't handle proxy like it works on bult-in node module http
+- [iso-http](https://www.npmjs.com/package/iso-http) or [axios](https://www.npmjs.com/package/axios) doesn't handle proxy like it works on bult-in node module http
 
 All I need to do
 
